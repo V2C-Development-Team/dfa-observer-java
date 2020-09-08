@@ -51,7 +51,14 @@ public class Bootloader {
       JSONObject stateObj = json.getJSONObject(Integer.toString(state.getKey()));
       if(stateObj.has("transitions")) {
         JSONObject transitions = stateObj.getJSONObject("transitions");
+        
+        if(transitions.has("*")) {
+          int defaultStateKey = transitions.getInt("*");
+          state.getValue().setDefaultState(states.get(defaultStateKey));
+        }
+        
         for(String transition : transitions.keySet()) {
+          if(transition.equals("*")) continue;
           int nextStateKey = transitions.getInt(transition);
           if(!states.containsKey(nextStateKey)) throw new Exception("State not found.");
           state.getValue().linkState(transition, states.get(nextStateKey));

@@ -5,8 +5,7 @@
       "please": 0,
       "place": 1,
       "delete": 8,
-      "wipe": 8,
-      "*": 1
+      "wipe": 8
     },
     "state": "restart"
   },

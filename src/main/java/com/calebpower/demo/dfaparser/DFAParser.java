@@ -54,13 +54,9 @@ public class DFAParser {
       Runtime.getRuntime().addShutdownHook(new Thread() {
         @Override public void run() {
           try {
-            System.out.println("Closing front end...");
+            System.out.println("Shutting down...");
             terminalUI.stop();
-            
             Thread.sleep(1000);
-            
-            System.out.println("Goodbye!");
-            Thread.sleep(200);
           } catch(InterruptedException e) {
             Thread.currentThread().interrupt();
           }

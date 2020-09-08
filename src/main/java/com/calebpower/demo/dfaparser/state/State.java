@@ -217,4 +217,13 @@ public class State {
     saveKey = key;
   }
   
+  /**
+   * Retrieves the transition that caused this state.
+   * 
+   * @return the incoming transition
+   */
+  public String getIncomingTransition() {
+    return incomingTransition;
+  }
+  
 }

@@ -41,7 +41,7 @@ public class TerminalUI implements Runnable {
   public static TerminalUI build() {
     TerminalUI terminalUI = new TerminalUI();
     terminalUI.thread = new Thread(terminalUI);
-    terminalUI.thread.setDaemon(true);
+    terminalUI.thread.setDaemon(false);
     terminalUI.thread.start();
     return terminalUI;
   }
