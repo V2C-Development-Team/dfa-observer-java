@@ -1,0 +1,38 @@
+plugins {
+  id "com.github.johnrengelman.shadow" version "5.1.0"
+}
+
+apply plugin: 'java-library'
+apply plugin: 'eclipse'
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  implementation 'commons-cli:commons-cli:1.4'
+  implementation 'org.json:json:20200518'
+  testImplementation 'org.easymock:easymock:4.0.2'
+  testImplementation 'junit:junit:4.13'
+}
+
+eclipse {
+  classpath {
+    downloadJavadoc = true
+    downloadSources = true
+  }
+}
+
+jar {
+  manifest {
+    attributes 'Main-Class': 'com.calebpower.demo.dfaparser.DFAParser'
+  }
+}
+
+shadowJar {
+  shadowJar {
+    baseName = 'dfa-parser'
+    classifier = null
+    version = null
+  }
+}
