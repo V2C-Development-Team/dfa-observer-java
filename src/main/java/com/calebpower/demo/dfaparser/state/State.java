@@ -168,9 +168,12 @@ public class State {
    * @param key the key of the entry
    * @param value the explicit value of the entry
    * @throws Exception if an entry was already set
+   *         or an oracle collision was detected
    */
   public void setSetEntry(String key, String value) throws Exception {
     if(hasSetEntry()) throw new Exception("Set entry already known.");
+    if(hasSaveKey() && saveKey.equals(key))
+      throw new Exception("Detected potential collision in oracle.");
     setEntry = new SimpleEntry<>(key, value);
   }
   
@@ -205,9 +208,12 @@ public class State {
    * 
    * @param key the save key to associate with incoming transitions
    * @throws Exception if a save key was already set
+   *         or an oracle collision was detected
    */
   public void setSaveKey(String key) throws Exception {
     if(hasSaveKey()) throw new Exception("Save key already known.");
+    if(hasSetEntry() && setEntry.getKey().equals(key))
+      throw new Exception("Detected potential collision in oracle.");
     saveKey = key;
   }
   

@@ -64,7 +64,7 @@ public class TerminalUI implements Runnable {
    * 
    * @param listener the input listener
    */
-  public void addInputListener(InputListener listener) {
+  public void registerInputListener(InputListener listener) {
     inputListeners.add(listener);
   }
   

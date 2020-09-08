@@ -1,0 +1,68 @@
+
+{
+  "0": {
+    "transitions": {
+      "please": 0,
+      "place": 1,
+      "delete": 8,
+      "wipe": 8,
+      "*": 1
+    },
+    "state": "restart"
+  },
+  "1": {
+    "transitions": {
+      "the": 2,
+      "*": 4
+    },
+    "set": {
+      "key": "action",
+      "value": "place"
+    }
+  },
+  "2": {
+    "transitions": {
+      "word": 3,
+      "*": 4
+    }
+  },
+  "3": {
+    "transitions": {
+      "*": 4
+    }
+  },
+  "4": {
+    "transitions": {
+      "in": 5,
+      "cancel": 0
+    },
+    "save": "word"
+  },
+  "5": {
+    "transitions": {
+      "position": 6,
+      "slot": 6,
+      "*": 7
+    }
+  },
+  "6": {
+    "transitions": {
+      "*": 7
+    }
+  },
+  "7": {
+    "state": "done",
+    "save": "position"
+  },
+  "8": {
+    "transitions": {
+      "cancel": 0,
+      "position": 6,
+      "slot": 6
+    },
+    "set": {
+      "key": "action",
+      "value": "delete"
+    }
+  }
+}

@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.calebpower.demo.dfaparser.state;
+package com.calebpower.demo.dfaparser.machine;
 
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
 import org.json.JSONObject;
+
+import com.calebpower.demo.dfaparser.state.State;
 
 /**
  * Loads the states for the DFA.

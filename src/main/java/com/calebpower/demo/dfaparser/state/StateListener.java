@@ -20,7 +20,14 @@ package com.calebpower.demo.dfaparser.state;
  * 
  * @author Caleb L. Power
  */
-public interface TerminalStateListener {
+public interface StateListener {
+  
+  /**
+   * Performs some action when a new state is reached.
+   * 
+   * @param state the new state
+   */
+  public void onState(State state);
   
   /**
    * Performs some action when a terminal state is reached.
