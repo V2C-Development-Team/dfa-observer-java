@@ -15,12 +15,14 @@
  */
 package com.calebpower.demo.dfaparser.state;
 
+import com.calebpower.demo.dfaparser.ui.TokenProcessor;
+
 /**
  * Navigates through the states with the help of provided tokens.
  * 
  * @author Caleb L. Power
  */
-public class Machine {
+public class Machine extends TokenProcessor {
   
   private State currentState = null;
   
@@ -40,7 +42,7 @@ public class Machine {
    * @throws Exception if the provided token caused the machine to enter an
    *         illegal state.
    */
-  public void pushToken(String token) throws Exception {
+  @Override public void pushToken(String token) throws Exception {
     if(currentState == null)
       throw new Exception("Illegal machine state.");
     
