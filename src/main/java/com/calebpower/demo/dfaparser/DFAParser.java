@@ -23,8 +23,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+
 import com.calebpower.demo.dfaparser.machine.Hypervisor;
 import com.calebpower.demo.dfaparser.machine.Machine;
+import com.calebpower.demo.dfaparser.net.DispatcherHandler;
+import com.calebpower.demo.dfaparser.ui.Logger;
 import com.calebpower.demo.dfaparser.ui.TerminalUI;
 
 /**
@@ -35,6 +42,16 @@ import com.calebpower.demo.dfaparser.ui.TerminalUI;
 public class DFAParser {
   
   /**
+   * Denotes the name of this application for the benefit of the dispatcher.
+   */
+  public static final String DISPATCHER_APP_ID = "concept";
+  
+  private static final String DEFAULT_DESTINATION = "ws://127.0.0.1:2585/v1/messages";
+  private static final String DESTINATION_PARAM_LONG = "destination";
+  private static final String DESTINATION_PARAM_SHORT = "d";
+  private static final String LOG_LABEL = "CONTROLLER";
+  
+  /**
    * Entry-point.
    * 
    * @param args the arguments
@@ -43,10 +60,30 @@ public class DFAParser {
     System.out.println("Hello, world!");
     
     try {
+      Options options = new Options();
+      options.addOption(DESTINATION_PARAM_SHORT, DESTINATION_PARAM_LONG, true,
+          "Specifies the default dispatcher address. Default = " + DEFAULT_DESTINATION);
+      CommandLineParser parser = new DefaultParser();
+      CommandLine cmd = parser.parse(options, args);
+      
+      String destination = null;
+
+      if (cmd.hasOption(DESTINATION_PARAM_LONG)) {
+        Logger.onDebug(LOG_LABEL, "Picked up an explicitly specified destination.");
+        destination = cmd.getOptionValue(DESTINATION_PARAM_LONG);
+      } else {
+        Logger.onDebug(LOG_LABEL, "No port specified, falling back to default.");
+        destination = DEFAULT_DESTINATION;
+      }
+      
       Machine machine = new Machine();
       Hypervisor hypervisor = new Hypervisor();
       hypervisor.boot(machine);
       machine.registerStateListener(hypervisor);
+      
+      DispatcherHandler handler = DispatcherHandler.build(destination);
+      handler.registerCommandListener(machine);
+      
       TerminalUI terminalUI = TerminalUI.build();
       terminalUI.registerInputListener(machine);
       

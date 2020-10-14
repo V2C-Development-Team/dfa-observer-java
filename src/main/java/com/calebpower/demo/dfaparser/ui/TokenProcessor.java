@@ -15,12 +15,17 @@
  */
 package com.calebpower.demo.dfaparser.ui;
 
+import com.calebpower.demo.dfaparser.DFAParser;
+
+import edu.uco.cs.v2c.dispatcher.api.listener.CommandListener;
+import edu.uco.cs.v2c.dispatcher.api.payload.incoming.RouteCommandPayload;
+
 /**
  * Process input into distinct tokens.
  * 
  * @author Caleb L. Power
  */
-public abstract class TokenProcessor implements InputListener {
+public abstract class TokenProcessor implements InputListener, CommandListener {
   
   /**
    * {@inheritDoc}
@@ -33,6 +38,14 @@ public abstract class TokenProcessor implements InputListener {
     } catch(Exception e) {
       System.err.println("Tokens could not be processed.");
     }
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override public void onIncomingCommand(RouteCommandPayload payload) {
+    if(payload.getRecipient().equalsIgnoreCase(DFAParser.DISPATCHER_APP_ID))
+      onInput(payload.getCommand());
   }
   
   /**
