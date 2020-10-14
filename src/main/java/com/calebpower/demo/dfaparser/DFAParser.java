@@ -57,7 +57,7 @@ public class DFAParser {
    * @param args the arguments
    */
   public static void main(String[] args) {
-    System.out.println("Hello, world!");
+    Logger.onDebug(LOG_LABEL, "Hello, world!");
     
     try {
       Options options = new Options();
@@ -91,7 +91,7 @@ public class DFAParser {
       Runtime.getRuntime().addShutdownHook(new Thread() {
         @Override public void run() {
           try {
-            System.out.println("Shutting down...");
+            Logger.onDebug(LOG_LABEL, "Shutting down...");
             terminalUI.stop();
             Thread.sleep(1000);
           } catch(InterruptedException e) {

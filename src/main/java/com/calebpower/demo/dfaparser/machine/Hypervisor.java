@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import com.calebpower.demo.dfaparser.DFAParser;
 import com.calebpower.demo.dfaparser.state.State;
 import com.calebpower.demo.dfaparser.state.StateListener;
+import com.calebpower.demo.dfaparser.ui.Logger;
 
 /**
  * The faux hypervisor implementation to manage the machine and the values
@@ -13,6 +14,8 @@ import com.calebpower.demo.dfaparser.state.StateListener;
  * @author Caleb L. Power
  */
 public class Hypervisor implements StateListener {
+  
+  private static final String LOG_LABEL = "HYPERVISOR";
   
   private Bootloader bootloader = null;
   private Machine machine = null;
@@ -45,21 +48,21 @@ public class Hypervisor implements StateListener {
    * {@inheritDoc}
    */
   @Override public void onState(State state) {
-    System.out.printf("--- Reached new state: %1$d via token %2$s\n", state.getID(), state.getIncomingTransition());
+    Logger.onDebug(LOG_LABEL, String.format("--- Reached new state: %1$d via token %2$s", state.getID(), state.getIncomingTransition()));
     for(Entry<String, String> entry : machine.getRegister().entrySet())
-      System.out.printf("- %1$s = %2$s\n", entry.getKey(), entry.getValue());
+      Logger.onDebug(LOG_LABEL, String.format("- %1$s = %2$s", entry.getKey(), entry.getValue()));
   }
   
   /**
    * {@inheritDoc}
    */
   @Override public void onTerminalState(State state) {
-    System.out.println("--- Hit terminal state!");
+    Logger.onDebug(LOG_LABEL, "--- Hit terminal state!");
     
     if(!machine.getRegister().containsKey("action"))
-      System.err.println("Oracle could not pick out the action.");
+      Logger.onDebug(LOG_LABEL, "Oracle could not pick out the action.");
     else if(!machine.getRegister().containsKey("position"))
-      System.err.println("Oracle could not pick out the position.");
+      Logger.onDebug(LOG_LABEL, "Oracle could not pick out the position.");
     else {
       String position = machine.getRegister().get("position");
       int index = -1;
@@ -91,27 +94,30 @@ public class Hypervisor implements StateListener {
       }
       
       if(index == -1)
-        System.err.println("Oracle picked up an invalid position.");
+        Logger.onError(LOG_LABEL, "Oracle picked up an invalid position.");
       else {
         String action = machine.getRegister().get("action");
         if(action.equals("place")) {
           if(!machine.getRegister().containsKey("word"))
-            System.err.println("Oracle could not pick out the word.");
+            Logger.onError(LOG_LABEL, "Oracle could not pick out the word.");
           else {
             String word = machine.getRegister().get("word");
-            System.out.printf("Modifying position %1$d: \"%2$s\" -> \"%3$s\"\n", index, values[index], word);
+            Logger.onInfo(LOG_LABEL, String.format("Modifying position %1$d: \"%2$s\" -> \"%3$s\"", index, values[index], word));
             values[index] = word;
           }
         } else if(action.equals("delete")) {
-          System.out.printf("Modifying position %1$d: \"%2$s\" -> \" \"\n", index, values[index]);
+          Logger.onInfo(LOG_LABEL, String.format("Modifying position %1$d: \"%2$s\" -> \" \"", index, values[index]));
           values[index] = "";
-        } else System.err.println("Oracle picked up an invalid action.");
+        } else Logger.onError(LOG_LABEL, "Oracle picked up an invalid action.");
       }
     }
     
+    StringBuilder sb = new StringBuilder();
     for(int i = 0; i < values.length; i++)
-      System.out.printf(" [ %1$s ]", values[i]);
-    System.out.printf("\n--- Rebooting...\n");
+      sb.append(String.format("[ %1$s ] ", values[i]));
+    
+    Logger.onInfo(LOG_LABEL, sb.toString());
+    Logger.onDebug(LOG_LABEL, "--- Rebooting...");
     machine.loadState(bootloader.getInitialState());
   }
   
