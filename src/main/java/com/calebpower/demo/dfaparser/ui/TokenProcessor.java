@@ -31,7 +31,7 @@ public abstract class TokenProcessor implements InputListener {
       try {
         pushToken(token);
       } catch(Exception e) {
-        System.err.printf("Token \"%1$s\" could not be processed.");
+        System.err.printf("Token \"%1$s\" could not be processed.\n", token);
       }
   }
   

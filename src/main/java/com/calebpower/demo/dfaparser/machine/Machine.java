@@ -32,7 +32,7 @@ import com.calebpower.demo.dfaparser.ui.TokenProcessor;
  */
 public class Machine extends TokenProcessor {
   
-  private Map<String, String> register = new HashMap<>();
+  private Map<String, List<String>> register = new HashMap<>();
   private State currentState = null;
   private List<StateListener> listeners = new LinkedList<>();
   
@@ -65,16 +65,16 @@ public class Machine extends TokenProcessor {
 
     if(currentState.hasSetEntry()) {
       Entry<String, String> setEntry = currentState.getSetEntry();
-      if(register.containsKey(setEntry.getKey()))
-        register.replace(setEntry.getKey(), setEntry.getValue());
-      else register.put(setEntry.getKey(), setEntry.getValue());
+      if(!register.containsKey(setEntry.getKey()))
+        register.put(setEntry.getKey(), new LinkedList<>());
+      register.get(setEntry.getKey()).add(setEntry.getValue());
     }
       
     if(currentState.hasSaveKey()) {
       Entry<String, String> saveEntry = currentState.getSaveEntry();
-      if(register.containsKey(saveEntry.getKey()))
-        register.replace(saveEntry.getKey(), saveEntry.getValue());
-      else register.put(saveEntry.getKey(), saveEntry.getValue());
+      if(!register.containsKey(saveEntry.getKey()))
+        register.put(saveEntry.getKey(), new LinkedList<>());
+      register.get(saveEntry.getKey()).add(saveEntry.getValue());
     }
     
     for(StateListener listener : listeners) {
@@ -97,7 +97,7 @@ public class Machine extends TokenProcessor {
    * 
    * @return a map representing the register
    */
-  public Map<String, String> getRegister() {
+  public Map<String, List<String>> getRegister() {
     return register;
   }
   

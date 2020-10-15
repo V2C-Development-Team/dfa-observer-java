@@ -1,5 +1,6 @@
 package com.calebpower.demo.dfaparser.machine;
 
+import java.util.List;
 import java.util.Map.Entry;
 
 import com.calebpower.demo.dfaparser.DFAParser;
@@ -45,9 +46,12 @@ public class Hypervisor implements StateListener {
    * {@inheritDoc}
    */
   @Override public void onState(State state) {
-    System.out.printf("--- Reached new state: %1$d via token %2$s\n", state.getID(), state.getIncomingTransition());
-    for(Entry<String, String> entry : machine.getRegister().entrySet())
-      System.out.printf("- %1$s = %2$s\n", entry.getKey(), entry.getValue());
+    System.out.printf("- Reached new state: %1$d via token %2$s\n", state.getID(), state.getIncomingTransition());
+    for(Entry<String, List<String>> entry : machine.getRegister().entrySet()) {
+      System.out.printf("--- Key: %1$s\n", entry.getKey());
+      for(String value : entry.getValue())
+        System.out.printf("----- Value: %1$s\n", value);
+    }
   }
   
   /**
@@ -61,7 +65,7 @@ public class Hypervisor implements StateListener {
     else if(!machine.getRegister().containsKey("position"))
       System.err.println("Oracle could not pick out the position.");
     else {
-      String position = machine.getRegister().get("position");
+      String position = machine.getRegister().get("position").get(0);
       int index = -1;
       
       switch(position.toLowerCase()) {
@@ -93,12 +97,12 @@ public class Hypervisor implements StateListener {
       if(index == -1)
         System.err.println("Oracle picked up an invalid position.");
       else {
-        String action = machine.getRegister().get("action");
+        String action = machine.getRegister().get("action").get(0);
         if(action.equals("place")) {
           if(!machine.getRegister().containsKey("word"))
             System.err.println("Oracle could not pick out the word.");
           else {
-            String word = machine.getRegister().get("word");
+            String word = machine.getRegister().get("word").get(0);
             System.out.printf("Modifying position %1$d: \"%2$s\" -> \"%3$s\"\n", index, values[index], word);
             values[index] = word;
           }
