@@ -1,5 +1,6 @@
 package com.calebpower.demo.dfaparser.machine;
 
+import java.util.List;
 import java.util.Map.Entry;
 
 import com.calebpower.demo.dfaparser.DFAParser;
@@ -48,9 +49,12 @@ public class Hypervisor implements StateListener {
    * {@inheritDoc}
    */
   @Override public void onState(State state) {
-    Logger.onDebug(LOG_LABEL, String.format("--- Reached new state: %1$d via token %2$s", state.getID(), state.getIncomingTransition()));
-    for(Entry<String, String> entry : machine.getRegister().entrySet())
-      Logger.onDebug(LOG_LABEL, String.format("- %1$s = %2$s", entry.getKey(), entry.getValue()));
+    System.out.printf("- Reached new state: %1$d via token %2$s\n", state.getID(), state.getIncomingTransition());
+    for(Entry<String, List<String>> entry : machine.getRegister().entrySet()) {
+      Logger.onDebug(LOG_LABEL, String.format("--- Key: %1$s\n", entry.getKey()));
+      for(String value : entry.getValue())
+        Logger.onDebug(LOG_LABEL, String.format("----- Value: %1$s\n", value));
+    }
   }
   
   /**
@@ -64,7 +68,7 @@ public class Hypervisor implements StateListener {
     else if(!machine.getRegister().containsKey("position"))
       Logger.onDebug(LOG_LABEL, "Oracle could not pick out the position.");
     else {
-      String position = machine.getRegister().get("position");
+      String position = machine.getRegister().get("position").get(0);
       int index = -1;
       
       switch(position.toLowerCase()) {
@@ -96,12 +100,12 @@ public class Hypervisor implements StateListener {
       if(index == -1)
         Logger.onError(LOG_LABEL, "Oracle picked up an invalid position.");
       else {
-        String action = machine.getRegister().get("action");
+        String action = machine.getRegister().get("action").get(0);
         if(action.equals("place")) {
           if(!machine.getRegister().containsKey("word"))
             Logger.onError(LOG_LABEL, "Oracle could not pick out the word.");
           else {
-            String word = machine.getRegister().get("word");
+            String word = machine.getRegister().get("word").get(0);
             Logger.onInfo(LOG_LABEL, String.format("Modifying position %1$d: \"%2$s\" -> \"%3$s\"", index, values[index], word));
             values[index] = word;
           }
