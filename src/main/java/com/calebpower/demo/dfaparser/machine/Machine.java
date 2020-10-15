@@ -43,6 +43,9 @@ public class Machine extends TokenProcessor {
    */
   public void loadState(State state) {
     this.currentState = state;
+    
+    if(state != null && state.doWipe())
+      register.clear();
   }
   
   /**
@@ -59,20 +62,19 @@ public class Machine extends TokenProcessor {
       throw new Exception("Illegal machine state.");
     
     if(currentState.doWipe()) register.clear();
-    else {
-      if(currentState.hasSetEntry()) {
-        Entry<String, String> setEntry = currentState.getSetEntry();
-        if(register.containsKey(setEntry.getKey()))
-          register.replace(setEntry.getKey(), setEntry.getValue());
-        else register.put(setEntry.getKey(), setEntry.getValue());
-      }
+
+    if(currentState.hasSetEntry()) {
+      Entry<String, String> setEntry = currentState.getSetEntry();
+      if(register.containsKey(setEntry.getKey()))
+        register.replace(setEntry.getKey(), setEntry.getValue());
+      else register.put(setEntry.getKey(), setEntry.getValue());
+    }
       
-      if(currentState.hasSaveKey()) {
-        Entry<String, String> saveEntry = currentState.getSaveEntry();
-        if(register.containsKey(saveEntry.getKey()))
-          register.replace(saveEntry.getKey(), saveEntry.getValue());
-        else register.put(saveEntry.getKey(), saveEntry.getValue());
-      }
+    if(currentState.hasSaveKey()) {
+      Entry<String, String> saveEntry = currentState.getSaveEntry();
+      if(register.containsKey(saveEntry.getKey()))
+        register.replace(saveEntry.getKey(), saveEntry.getValue());
+      else register.put(saveEntry.getKey(), saveEntry.getValue());
     }
     
     for(StateListener listener : listeners) {
