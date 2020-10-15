@@ -26,13 +26,13 @@ public abstract class TokenProcessor implements InputListener {
    * {@inheritDoc}
    */
   @Override public void onInput(String input) {
-    try {
-      String[] tokens = input.split("\\s+");
-      for(String token : tokens)
+    String[] tokens = input.split("\\s+");
+    for(String token : tokens)
+      try {
         pushToken(token);
-    } catch(Exception e) {
-      System.err.println("Tokens could not be processed.");
-    }
+      } catch(Exception e) {
+        System.err.printf("Token \"%1$s\" could not be processed.\n", token);
+      }
   }
   
   /**
