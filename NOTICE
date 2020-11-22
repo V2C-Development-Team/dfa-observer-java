@@ -1,2 +1,7 @@
-Deterministic Finite-State Automata Parser Demonstration
-Copyright (c) 2020 Caleb L. Power. All rights reserved.
+Deterministic Finite-State Automata Parser Demonstration for V2C
+Copyright (c) 2020 Caleb L. Power, Everistus Akpabio, Rashed Alrashed,
+Nicholas Clemmons, Jonathan Craig, James Cole Riggall, and Glen Mathew.
+All rights reserved.
+
+This project contains a very large part of the DFA Observer and Parser,
+designed and developed by Caleb L. Power.
